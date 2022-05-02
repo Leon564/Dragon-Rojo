@@ -130,7 +130,7 @@ const Form = () => {
               value={lvl}
               onChange={handleChange}
             >
-              <option value="">Seleccione</option>
+              <option value="">Seleccione una opción</option>
               <option value="9kup">Blanca Puntas Amarillas 9 kup</option>
               <option value="8kup">Amarilla 8 kup</option>
               <option value="7kup">Amarilla Puntas Verdes 7 kup</option>
@@ -155,7 +155,7 @@ const Form = () => {
               value={day}
               onChange={handleChange}
             >
-              <option value="">Seleccione</option>
+              <option value="">Seleccione una opción</option>
               {days.map((day) => (
                 <option key={day} value={day}>
                   {day}
@@ -176,7 +176,7 @@ const Form = () => {
               value={month}
               onChange={handleChange}
             >
-              <option value="">Seleccione</option>
+              <option value="">Seleccione una opción</option>
               <option value="Enero">Enero</option>
               <option value="Febrero">Febrero</option>
               <option value="Marzo">Marzo</option>
