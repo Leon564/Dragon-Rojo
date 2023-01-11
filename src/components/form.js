@@ -140,6 +140,7 @@ const Form = () => {
               <option value="3kup">Azul Puntas Rojas 3 kup</option>
               <option value="2kup">Roja 2 kup</option>
               <option value="1kup">Roja Puntas Negras 1 kup</option>
+              <option value="1dan">Negra 1 dan</option>
             </select>
           </div>
           <div className="mt-5 w-11/12 md:w-1/2 px-3 mb-6 md:mb-0">
