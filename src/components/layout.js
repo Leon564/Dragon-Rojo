@@ -4,7 +4,7 @@ import logo from "../Assets/icoDR.png";
 const Layout = (props) => {
    return (
     <div className="w-full">
-      <nav className="flex  items-center justify-between flex-wrap bg-gray-50 dark:bg-gray-800 p-1">
+      <nav className="flex  items-center justify-between flex-wrap bg-gray-800 dark:bg-gray-800 p-1">
         <div className=" ml-24 md:ml-5 flex items-center flex-shrink-0 text-white mr-6">
           <img
             src={logo}

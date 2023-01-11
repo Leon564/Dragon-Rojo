@@ -13,6 +13,9 @@ const Form = () => {
   const [success, setSuccess] = useState(false);
   const [days, setDays] = useState([]);
   const [years, setYears] = useState([]);
+  const [pdf, setPdf] = useState(true);
+
+
 
   useEffect(() => {
     const days = [];
@@ -27,6 +30,11 @@ const Form = () => {
 
     setDays(days);
     setYears(years);
+
+    //get from local storage
+    //localStorage.getItem("pdf"); and set it to state
+    setPdf(localStorage.getItem("pdf"));
+
   }, []);
 
   const handleSubmit = (e) => {
@@ -47,8 +55,9 @@ const Form = () => {
         setMessage("");
       }, 5000);
     } else {
+      const _pdf= pdf ? "&pdf=true" : "";
       window.location.href = encodeURI(
-        `https://dragon-rojo-api.onrender.com/new?lvl=${lvl}&name=${name}&last_name=${last_name}&day=${day}&month=${month}&year=${year}`
+        `https://dragon-rojo-api.onrender.com/new?lvl=${lvl}&name=${name}&last_name=${last_name}&day=${day}&month=${month}&year=${year}${_pdf}`
       );
       setMessage("Procesando...");
       setError(false);
@@ -79,6 +88,10 @@ const Form = () => {
     } else if (e.target.id === "message") {
       setMessage(e.target.value);
     }
+  };
+
+  const handlePdf = () => {
+    setPdf(!pdf);
   };
 
   return (
@@ -214,13 +227,28 @@ const Form = () => {
             </select>
           </div>
           <div className=" w-full mt-10 items-center text-center content-center">
+            <div className="flex justify-center w-full mb-5 flex-col items-center text-center">
+            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{`PDF (puede que tarde mas pero el formato no sufrira por la version de office)`}</span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" className="sr-only peer" onChange={() => handlePdf()} defaultChecked={!!pdf} />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                
+              </label>
+              
+            </div>
+
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Crear Diploma
             </button>
+            {/* crear un switch para setear pdf  */}
+
+
+
           </div>
+
         </div>
         <div className="text-red-500 text-sm">{message}</div>
       </form>
