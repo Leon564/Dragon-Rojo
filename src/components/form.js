@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import "dotenv/config";
 
 const Form = () => {
   const [name, setName] = useState("");
@@ -48,7 +49,7 @@ const Form = () => {
       }, 5000);
     } else {
       window.location.href = encodeURI(
-        `https://dragon-rojo-api.herokuapp.com/new?lvl=${lvl}&name=${name}&last_name=${last_name}&day=${day}&month=${month}&year=${year}`
+        `${process.env.API_URL}/new?lvl=${lvl}&name=${name}&last_name=${last_name}&day=${day}&month=${month}&year=${year}`
       );
       setMessage("Procesando...");
       setError(false);
