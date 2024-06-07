@@ -1,12 +1,15 @@
-import './App.css';
-import Layout from './components/layout';
-import Form from './components/form';
+import "./App.css";
+
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
+
+import AuthProvider from "./auth.context";
 
 function App() {
   return (
-    <div className="App">
-      <Layout children={<Form/>}/>
-      </div>
+    <AuthProvider>
+      <RouterProvider router={router()} />
+    </AuthProvider>
   );
 }
 

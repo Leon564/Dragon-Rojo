@@ -15,10 +15,28 @@ const CertificateForm = () => {
     setPdf(!pdf);
   };
 
+  const OPTIONS = [
+    { value: "9kup", label: "Blanca Puntas Amarillas 9 kup" },
+    { value: "8kup", label: "Amarilla 8 kup" },
+    { value: "7kup", label: "Amarilla Puntas Verdes 7 kup" },
+    { value: "6kup", label: "Verde 6 kup" },
+    { value: "5kup", label: "Verde Puntas Azules 5 kup" },
+    { value: "4kup", label: "Azul 4 kup" },
+    { value: "3kup", label: "Azul Puntas Rojas 3 kup" },
+    { value: "2kup", label: "Roja 2 kup" },
+    { value: "1kup", label: "Roja Puntas Negras 1 kup" },
+    { value: "1dan", label: "Negra 1 dan" },
+  ];
+
   return (
     <div className="w-full">
       <h1 className="text-2xl font-bold text-center">Crear Diploma</h1>
-      <Form onFinish={onSubmit} layout="vertical" form={form}>
+      <Form
+        onFinish={onSubmit}
+        layout="vertical"
+        form={form}
+        initialValues={{ pdf }}
+      >
         <div className="flex flex-wrap -mx-3 mb-6 text-center max-md:justify-center">
           <Form.Item
             className="mt-5 w-full md:w-1/2 px-3 mb-6 md:mb-0"
@@ -49,7 +67,7 @@ const CertificateForm = () => {
           </Form.Item>
 
           <Form.Item
-            className="mt-5 w-11/12 md:w-1/2 px-3 mb-6 md:mb-0"
+            className="mt-5 w-full md:w-1/2 px-3 mb-6 md:mb-0"
             name="lvl"
             label="Grado"
             rules={[
@@ -70,7 +88,7 @@ const CertificateForm = () => {
           </Form.Item>
 
           <Form.Item
-            className="mt-5 w-11/12 md:w-1/2 px-3 mb-6 md:mb-0"
+            className="mt-5 w-full md:w-1/2 px-3 mb-6 md:mb-0"
             name="date"
             label="Fecha"
             rules={[
@@ -83,7 +101,7 @@ const CertificateForm = () => {
             <DatePicker size="large" className="w-full h-full" />
           </Form.Item>
           <Form.Item
-            className="flex flex-row align-bottom mt-5 w-11/12 md:w-1/2 px-3 mb-6 md:mb-0"
+            className="flex flex-row align-bottom mt-5 w-full md:w-1/2 px-3 mb-6 md:mb-0"
             name="pdf"
             label="PDF"
             labelCol={{ span: 24 }}
@@ -113,15 +131,4 @@ const CertificateForm = () => {
 };
 export default CertificateForm;
 
-export const OPTIONS = [
-  { value: "9kup", label: "Blanca Puntas Amarillas 9 kup" },
-  { value: "8kup", label: "Amarilla 8 kup" },
-  { value: "7kup", label: "Amarilla Puntas Verdes 7 kup" },
-  { value: "6kup", label: "Verde 6 kup" },
-  { value: "5kup", label: "Verde Puntas Azules 5 kup" },
-  { value: "4kup", label: "Azul 4 kup" },
-  { value: "3kup", label: "Azul Puntas Rojas 3 kup" },
-  { value: "2kup", label: "Roja 2 kup" },
-  { value: "1kup", label: "Roja Puntas Negras 1 kup" },
-  { value: "1dan", label: "Negra 1 dan" },
-];
+

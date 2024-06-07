@@ -1,16 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useContext } from "react";
 import logo from "../Assets/icoDR.png";
+import { Button } from "antd";
+import { AuthContext } from "../auth.context";
+import { Link, useNavigate } from "react-router-dom";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
 const Layout = ({ children }: LayoutProps) => {
+  const { logout } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
   return (
     <div className="w-full">
       <nav className="flex  items-center justify-between flex-wrap bg-gray-800 dark:bg-gray-800 p-1">
-        <div className=" ml-24 md:ml-5 flex items-center flex-shrink-0 text-white mr-6">
+        <div
+          className=" ml-24 md:ml-5 flex items-center flex-shrink-0 text-white mr-6 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <img
             src={logo}
             alt="logo"
@@ -22,20 +32,21 @@ const Layout = ({ children }: LayoutProps) => {
         </div>
         <div className="w-full md:block flex-grow lg:flex lg:items-center lg:w-auto hidden">
           <div className="text-sm lg:flex-grow">
-            <a
-              href="#"
+            <Link
+              to="/history"
               className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-500 mr-4 ml-5"
             >
-              Escuela de Tae Kwon Do
-            </a>
+              Historial
+            </Link>
           </div>
           <div>
-            <a
-              href="#"
-              className="cursor-pointer block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-500 mr-4"
+            <Button
+              type="text"
+              className="text-white hover:!text-gray-500 mr-4 ml-5 hover:!bg-transparent"
+              onClick={logout}
             >
-              Concepcion Quezaltepeque
-            </a>
+              Cerrar Sesión
+            </Button>
           </div>
         </div>
       </nav>

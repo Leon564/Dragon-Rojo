@@ -1,25 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form } from "antd";
 import { useEffect, useState } from "react";
+import { message } from "antd";
 
 const useForm = () => {
   const [pdf, setPdf] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   useEffect(() => {
-
     setPdf(localStorage.getItem("pdf") === "true" ? true : false);
-
   }, []);
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     setLoading(true);
-    const date = e.date;
-    e.month = getMonth(date.month() + 1, true);
-    e.day = date.date();
-    e.year = date.year();
+    // const date = e.date;
+    // console.log(e.date.format("YYYY-MM-DD"));
+    // e.month = getMonth(date.month() + 1, true);
+    // e.day = date.date();
+    // e.year = date.year();
 
-    delete e.date;
+    e.date = e.date.format("YYYY-MM-DD");
+
+    
     const query = Object.keys(e)
       .map((key) => {
         if (e[key] !== undefined && e[key] !== false) {
@@ -29,10 +31,43 @@ const useForm = () => {
       })
       .join("&");
 
-    window.open(
-      encodeURI(`${import.meta.env.VITE_API_URL}/new?${query}`),
-      "_blank"
+    // window.open(
+    //   encodeURI(`${import.meta.env.VITE_API_URL}/api/new?${query}`),
+    //   "_blank"
+    // );
+
+    const headers = new Headers();
+    //headers.append("authorization", `Bearer ${localStorage.getItem("token")}`);
+    headers.append(
+      "authorization",
+      `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMyIsInN1YiI6IjY2NjIzNmIyYWM4ZjUxZGNkYWI0Nzk1NCIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MTc3MTI1NjMsImV4cCI6MTc0OTI0ODU2M30.qqdtOcALsFMCo5cBOCR8_BXWyUjUD_on4KRbwtAFoHk`
     );
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/documents/create?${query}`,
+      {
+        method: "GET",
+        headers,
+      }
+    ).catch((error) => {
+      message.error("Error al generar el diploma, intenta de nuevo.");
+      console.error("Error:", error);
+      setLoading(false);
+      return;
+    });
+
+    if (response) {
+      const url = window.URL.createObjectURL(new Blob([await response.blob()]));
+      const link = document.createElement("a");
+      const fileName = `${e.name} ${e.last_name}${pdf ? ".pdf" : ".docx"}`;
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setLoading(false);
+    }
+    
     setLoading(false);
   };
 
