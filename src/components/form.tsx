@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, DatePicker, Form, Input, Select, Spin, Switch } from "antd";
-
-import { useEffect, useState } from "react";
+import { Button, DatePicker, Form, Input, Select, Switch } from "antd";
 import useForm from "../hooks/useForm";
-import { useSearchParams } from "react-router-dom";
 
 const CertificateForm = () => {
   const { form, onSubmit, pdf, setPdf, loading } = useForm();
 
  
-  const [message, setMessage] = useState("");
+  //const [message, setMessage] = useState("");
 
  
 
@@ -128,7 +125,7 @@ const CertificateForm = () => {
             </Button>
           </Form.Item>
         </div>
-        <div className="text-red-500 text-sm">{message}</div>
+        {/* <div className="text-red-500 text-sm">{message}</div> */}
       </Form>
     </div>
   );
