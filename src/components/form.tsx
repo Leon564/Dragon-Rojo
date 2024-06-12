@@ -2,13 +2,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, DatePicker, Form, Input, Select, Spin, Switch } from "antd";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useForm from "../hooks/useForm";
+import { useSearchParams } from "react-router-dom";
 
 const CertificateForm = () => {
   const { form, onSubmit, pdf, setPdf, loading } = useForm();
 
+ 
   const [message, setMessage] = useState("");
+
+ 
 
   const handlePdf = () => {
     localStorage.setItem("pdf", !pdf ? "true" : "false");
@@ -98,7 +102,7 @@ const CertificateForm = () => {
               },
             ]}
           >
-            <DatePicker size="large" className="w-full h-full" />
+            <DatePicker size="large" className="w-full h-full" format={"YYYY-MM-DD"} />
           </Form.Item>
           <Form.Item
             className="flex flex-row align-bottom mt-5 w-full md:w-1/2 px-3 mb-6 md:mb-0"

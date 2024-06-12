@@ -6,6 +6,7 @@ import CertificateForm from "../components/form";
 import { useCallback, useContext } from "react";
 import { AuthContext } from "../auth.context";
 import History from "../components/history";
+import Start from "../components/start";
 
 const Routes = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -13,6 +14,10 @@ const Routes = () => {
   const protectedRoutes = [
     {
       path: "/",
+      element: <Layout children={<Start />} />,
+    },
+    {
+      path: "/create",
       element: <Layout children={<CertificateForm />} />,
     },
     {

@@ -1,79 +1,64 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import { getDocumentsService } from "../services/api";
+import { useState } from "react";
 import styled from "styled-components";
+import { Button, Typography, Dropdown, MenuProps } from "antd";
 import {
-  Button,
-  Typography,
-  Row as AntdRow,
-  Dropdown,
-  Menu,
-  MenuProps,
-} from "antd";
-import { DownOutlined, SmileOutlined } from "@ant-design/icons";
-
-const useHistory = () => {
-  const [history, setHistory] = useState<any[]>([]);
-  useEffect(() => {
-    const fetchHistory = async () => {
-      const documents = await getDocumentsService();
-      setHistory(documents.data);
-    };
-    fetchHistory();
-  }, []);
-  return { history };
-};
-
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.antgroup.com"
-      >
-        1st menu item
-      </a>
-    ),
-  },
-  {
-    key: "2",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.aliyun.com"
-      >
-        2nd menu item (disabled)
-      </a>
-    ),
-    icon: <SmileOutlined />,
-    disabled: true,
-  },
-  {
-    key: "3",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.luohanacademy.com"
-      >
-        3rd menu item (disabled)
-      </a>
-    ),
-    disabled: true,
-  },
-  {
-    key: "4",
-    danger: true,
-    label: "a danger item",
-  },
-];
+  MoreOutlined,
+  EditOutlined,
+  DownloadOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import moment from "moment";
+import useHistory from "../hooks/useHistory";
 
 const History = () => {
-  const { history } = useHistory();
+  const { history, download, deleteDocument } = useHistory();
   console.log(history);
+  const [selected, setSelected] = useState<string | undefined>();
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
+      icon: <EditOutlined />,
+    },
+    {
+      key: "2",
+      label: (
+        <a href="#" onClick={() => download(selected!, "docx")}>
+          descargar Docx
+        </a>
+      ),
+      icon: <DownloadOutlined />,
+    },
+    {
+      key: "3",
+      label: (
+        <a href="#" onClick={() => download(selected!, "pdf")}>
+          descargar PDF
+        </a>
+      ),
+      icon: <DownloadOutlined />,
+    },
+    {
+      key: "4",
+      label: (
+        <a
+          href="#"
+          onClick={() => {
+            deleteDocument(selected!);
+            setSelected(undefined);
+          }}
+        >
+          Eliminar
+        </a>
+      ),
+      danger: true,
+      icon: <DeleteOutlined />,
+    },
+  ];
+
   return (
     <div>
       <Title>History</Title>
@@ -90,6 +75,9 @@ const History = () => {
             <Col style={{ gridArea: "date" }}>
               <TextBold>Fecha</TextBold>
             </Col>
+            <Col style={{ gridArea: "created" }}>
+              <TextBold>Creado</TextBold>
+            </Col>
           </Row>
         </ListHeader>
         {history.map((item) => (
@@ -101,7 +89,14 @@ const History = () => {
               <Typography.Text>{item.level}</Typography.Text>
             </Col>
             <Col style={{ gridArea: "date" }}>
-              <Typography.Text>{item.date}</Typography.Text>
+              <Typography.Text>
+                {moment(item.date).format("DD-MM-YYYY")}
+              </Typography.Text>
+            </Col>
+            <Col style={{ gridArea: "created" }}>
+              <Typography.Text>
+                {moment(item.createdAt).format("DD-MM-YYYY-hh:mm")}
+              </Typography.Text>
             </Col>
             <Col style={{ gridArea: "action" }}>
               {/* make a dropdown with three points button */}
@@ -110,8 +105,8 @@ const History = () => {
               </AntdRow> */}
 
               <Dropdown menu={{ items }} destroyPopupOnHide trigger={["click"]}>
-                <Button type="text">
-                  <span>...</span>
+                <Button type="text" onClick={() => setSelected(item._id)}>
+                  <MoreOutlined />
                 </Button>
               </Dropdown>
             </Col>
@@ -128,12 +123,6 @@ const Title = styled(Typography.Text)`
   display: block;
   font-size: 25px;
   margin-block: 30px 0px;
-`;
-
-const SubTitle = styled(Typography.Text)`
-  display: block;
-
-  margin-block: 0px 30px;
 `;
 
 const ListHeader = styled.div``;
@@ -168,14 +157,19 @@ const Col = styled.div`
 
 const Row = styled.div<{ header?: boolean }>`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 100px;
-  grid-template-areas: "name level date action";
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 100px;
+  grid-template-areas: "name level date created action";
   grid-auto-rows: auto;
 
-  border: 1px solid gray;
+  justify-content: center;
+  align-items: center;
+
   padding: 15px;
   grid-column-gap: 15px;
   grid-row-gap: 15px;
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
 
   @media screen and (max-width: 769px) {
     grid-template-columns: 2fr 1fr;
@@ -188,7 +182,16 @@ const Row = styled.div<{ header?: boolean }>`
       props.header &&
       `
         display: none;
-        border:none;
+        
   `}
   }
+
+  ${(props) =>
+    props.header &&
+    `
+   box-shadow: none;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    border-radius: 5px;
+  `}
 `;
