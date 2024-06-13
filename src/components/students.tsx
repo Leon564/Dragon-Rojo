@@ -1,55 +1,61 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, Typography, Dropdown, MenuProps } from "antd";
+import { Button, Typography, Dropdown, MenuProps, Input, Form } from "antd";
 import {
   EllipsisOutlined,
   EditOutlined,
-  DownloadOutlined,
+  FormOutlined,
   DeleteOutlined,
+  SyncOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import useHistory from "../hooks/useHistory";
-import useTitle from "../hooks/useTitle";
 
-const History = () => {
-  useTitle("Historial");
-  const { history, download, deleteDocument } = useHistory();
+import useTitle from "../hooks/useTitle";
+import useStudents from "../hooks/useStudents";
+import useQuery from "../hooks/useQuery";
+
+const Students = () => {
+  useTitle("Estudiantes");
+  const query = useQuery();
+  const { students, deleteStudent, form } = useStudents();
+
+  const [data, setData] = useState<any>();
   
   const [selected, setSelected] = useState<string | undefined>();
+
+  useEffect(() => {
+    const name = query.get('name');
+    console.log("Name", name);
+    setData({ name });
+  }, []);
 
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
+      //label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
+      label: (
+        <Link to={`#`}>Editar</Link>
+      ),
       icon: <EditOutlined />,
-    },
+    },    
     {
       key: "2",
       label: (
-        <a href="#" onClick={() => download(selected!, "docx")}>
-          descargar Docx
-        </a>
+        <a href={`/create?student=${selected}`}>Crear diploma</a>
       ),
-      icon: <DownloadOutlined />,
+      icon: <FormOutlined />,
     },
     {
       key: "3",
       label: (
-        <a href="#" onClick={() => download(selected!, "pdf")}>
-          descargar PDF
-        </a>
-      ),
-      icon: <DownloadOutlined />,
-    },
-    {
-      key: "4",
-      label: (
         <a
           href="#"
           onClick={() => {
-            deleteDocument(selected!);
+            deleteStudent(selected!);
             setSelected(undefined);
           }}
         >
@@ -57,6 +63,7 @@ const History = () => {
         </a>
       ),
       danger: true,
+      disabled: true,
       icon: <DeleteOutlined />,
     },
   ];
@@ -64,6 +71,18 @@ const History = () => {
   return (
     <div>
       <Title>History</Title>
+      <FilterSection>
+      <FormContainer layout="vertical" form={form} initialValues={data}>
+        <FormItem label="Nombre" name={'name'}>
+          <Input />
+        </FormItem>
+        <FormItem label="Nivel" name={'label'}>
+          <Input />
+        </FormItem>        
+      </FormContainer>
+      <StyledButton className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="primary"><SyncOutlined/></StyledButton>
+      <StyledButton className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="primary"><PlusOutlined/></StyledButton>
+    </FilterSection>
       <ListContainer>
         <ListHeader>
           <Row style={{ border: "none" }} header>
@@ -75,24 +94,24 @@ const History = () => {
               <TextBold>Nivel</TextBold>
             </Col>
             <Col style={{ gridArea: "date" }}>
-              <TextBold>Fecha</TextBold>
+              <TextBold>Fecha de nacimiento</TextBold>
             </Col>
             <Col style={{ gridArea: "created" }}>
               <TextBold>Creado</TextBold>
             </Col>
           </Row>
         </ListHeader>
-        {history.map((item) => (
+        {students.map((item) => (
           <Row key={item._id}>
             <Col style={{ gridArea: "name" }}>
-              <Typography.Text>{`${item.name} ${item.lastName}`}</Typography.Text>
+              <Typography.Text>{`${item.firstName} ${item.lastName}`}</Typography.Text>
             </Col>
             <Col style={{ gridArea: "level" }}>
-              <Typography.Text>{item.level}</Typography.Text>
+              <Typography.Text>{`${getBeltColor(item.level)} ${item.level}`}</Typography.Text>
             </Col>
             <Col style={{ gridArea: "date" }}>
               <Typography.Text>
-                {moment(item.date).format("DD-MM-YYYY")}
+                {moment(item.dateOfBirth).format("DD-MM-YYYY")}
               </Typography.Text>
             </Col>
             <Col style={{ gridArea: "created" }}>
@@ -119,7 +138,73 @@ const History = () => {
   );
 };
 
-export default History;
+export default Students;
+
+export const levels = [
+  { level: "10kup", color: "Blanca" },
+  { level: "9kup", color: "Blaca P.Amarillas" },
+  { level: "8kup", color: "Amarilla" },
+  { level: "7kup", color: "Amarilla P.Verdes" },
+  { level: "6kup", color: "Verde" },
+  { level: "5kup", color: "Verde P.Azules" },
+  { level: "4kup", color: "Azul" },
+  { level: "3kup", color: "Azul P.Rojas" },
+  { level: "2kup", color: "Roja" },
+  { level: "1kup", color: "Roja P.Negra" },
+  { level: "1dan", color: "Negra" }
+];
+
+export function getBeltColor(level:string) {
+  const levelData = levels.find(l => l.level === level);
+  return levelData ? levelData.color : "Unknown";
+}
+
+
+const FilterSection = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  margin-block: 20px 0px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const FormContainer = styled(Form)`
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: column;
+  }
+`;
+
+const FormItem = styled(Form.Item)`
+  flex: 1;
+  margin-right: 8px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 16px;
+  }
+`;
+
+const StyledButton = styled(Button)`
+  margin-left: 16px;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    align-self: center;
+  }
+`;
+
+//==================================
+
 
 const Title = styled(Typography.Text)`
   display: block;
@@ -174,12 +259,16 @@ const Row = styled.div<{ header?: boolean }>`
   border-radius: 5px;
 
   @media screen and (max-width: 769px) {
-    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    grid-template-columns: 1fr;
     grid-template-areas:
       "name"
-      "level date"
-      "action action";
-
+      "level"
+      "date"
+      "created"
+      "action";
     ${(props) =>
       props.header &&
       `

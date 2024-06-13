@@ -7,6 +7,7 @@ import { useCallback, useContext } from "react";
 import { AuthContext } from "../auth.context";
 import History from "../components/history";
 import Start from "../components/start";
+import Students from "../components/students";
 
 const Routes = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -23,6 +24,10 @@ const Routes = () => {
     {
       path: "/history",
       element: <Layout children={<History />} />,
+    },
+    {
+      path: "/students",
+      element: <Layout children={<Students />} />,
     },
   ];
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const TOKEN = localStorage.getItem("token");
 export const loginService = async ({
   username,
@@ -74,7 +75,6 @@ export type CreateDocument = {
 };
 
 export const createDocumentService = async (data: CreateDocument) => {
-  console.log(data);
   const query = Object.keys(data)
     .map((key) => {
       if (data[key] !== undefined && data[key] !== false) {
@@ -86,6 +86,7 @@ export const createDocumentService = async (data: CreateDocument) => {
       return "";
     })
     .join("&");
+
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/documents/create?${query}`,
     {
@@ -104,6 +105,86 @@ export const createDocumentService = async (data: CreateDocument) => {
 export const deleteDocumentService = async (id: string) => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/documents/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+  );
+  if (response.ok) return response.json();
+  return { error: response.statusText, ...(await response.json()) };
+};
+
+//students
+//TODO: sort by field
+export const getStudentsService = async (params: any) => {
+  console.log(params.filter);
+  const query = Object.keys(params)
+    .map((key) => {
+      if (params[key] !== undefined) {
+        return `${key}=${params[key]}`;
+      }
+      return "";
+    })
+    .filter((item) => item !== "")
+    .join("&");
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/students?${query}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+  );
+
+  if (response.ok) return response.json();
+  return { error: response.statusText, ...(await response.json()) };
+};
+
+export const getOneStudentService = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/students/${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+  );
+  if (response.ok) return response.json();
+  return { error: response.statusText, ...(await response.json()) };
+};
+
+export type CreateStudent = {
+  name: string;
+  dateOfBirth: string;
+  level: string;
+  weight: string;
+  carnet: string;
+};
+
+export const createStudentService = async (data: CreateStudent) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/students`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${TOKEN}`,
+    },
+    body: JSON.stringify(data),
+  });
+  if (response.ok) return response.json();
+  return { error: response.statusText, ...(await response.json()) };
+};
+
+export const deleteStudentService = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/students/${id}`,
     {
       method: "DELETE",
       headers: {

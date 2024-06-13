@@ -43,8 +43,8 @@ const CertificateForm = () => {
         <div className="flex flex-wrap -mx-3 mb-6 text-center max-md:justify-center">
           <Form.Item
             className="mt-5 w-full md:w-1/2 px-3 mb-6 md:mb-0"
-            name="name"
-            label="Apellido"
+            name="fisrt_name"
+            label="Nombre"
             rules={[
               {
                 required: true,
