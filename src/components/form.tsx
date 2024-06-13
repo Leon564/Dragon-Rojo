@@ -2,8 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, DatePicker, Form, Input, Select, Switch } from "antd";
 import useForm from "../hooks/useForm";
+import useTitle from "../hooks/useTitle";
 
 const CertificateForm = () => {
+  useTitle("Crear Diploma");
   const { form, onSubmit, pdf, setPdf, loading } = useForm();
 
  

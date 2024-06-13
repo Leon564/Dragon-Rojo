@@ -11,10 +11,12 @@ import {
 import { Link } from "react-router-dom";
 import moment from "moment";
 import useHistory from "../hooks/useHistory";
+import useTitle from "../hooks/useTitle";
 
 const History = () => {
+  useTitle("Historial");
   const { history, download, deleteDocument } = useHistory();
-  console.log(history);
+  
   const [selected, setSelected] = useState<string | undefined>();
 
   const items: MenuProps["items"] = [

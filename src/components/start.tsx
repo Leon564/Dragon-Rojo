@@ -4,6 +4,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import useTitle from "../hooks/useTitle";
 
 const functions = [
   {
@@ -32,6 +33,7 @@ const functions = [
 ];
 
 const StartMenu = () => {
+  useTitle("Inicio");
   return (
     <div
       className="flex items-center justify-center bg-gray-100 p-0 m-0"

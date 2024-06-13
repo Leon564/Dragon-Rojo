@@ -3,8 +3,10 @@ import { useContext } from "react";
 import logov3 from "../assets/logoV3.png";
 import { Card, Input, Checkbox, Button, Form, Image } from "antd";
 import { AuthContext } from "../auth.context";
+import useTitle from "../hooks/useTitle";
 
 export default function Login() {
+  useTitle("Login");
   const { login, loading } = useContext(AuthContext);
   
   return (
