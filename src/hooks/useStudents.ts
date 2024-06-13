@@ -35,7 +35,7 @@ const useStudents = () => {
           { $expr: { $regexMatch: { input: { $concat: ['$firstName', ' ', '$lastName'] }, regex: name, options: 'i' } } }
         ]
       }) : undefined;
-      const students = await getStudentsService({ filter, limit:1, page:2 });
+      const students = await getStudentsService({ filter });
       setStudents(students.data);
     };
     fetchStudents();
