@@ -62,7 +62,11 @@ const Students = () => {
     {
       key: "1",
       //label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
-      label: <Link to={`#`} onClick={()=>setVisible(true)}>Editar</Link>,
+      label: (
+        <Link to={`#`} onClick={() => setVisible(true)}>
+          Editar
+        </Link>
+      ),
       icon: <EditOutlined />,
     },
     {
@@ -133,23 +137,25 @@ const Students = () => {
             <Select options={options} />
           </FormItem>
         </FormContainer>
-        <StyledButton
-          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          type="primary"
-          onClick={resetFilters}
-        >
-          <SyncOutlined />
-        </StyledButton>
-        <StyledButton
-          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          type="primary"
-          onClick={() => {
-            setSelected(undefined);
-            setVisible(true);
-          }}
-        >
-          <PlusOutlined />
-        </StyledButton>
+        <div className="flex flex-row gap-5">
+          <StyledButton
+            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            type="primary"
+            onClick={resetFilters}
+          >
+            <SyncOutlined />
+          </StyledButton>
+          <StyledButton
+            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            type="primary"
+            onClick={() => {
+              setSelected(undefined);
+              setVisible(true);
+            }}
+          >
+            <PlusOutlined />
+          </StyledButton>
+        </div>
       </FilterSection>
       <ListContainer>
         <ListHeader>
