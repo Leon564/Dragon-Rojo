@@ -93,6 +93,12 @@ const Layout = ({ children }: LayoutProps) => {
                 Inicio
               </Link>
               <Link
+                to="/students"
+                className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-500 mr-4 ml-5"
+              >
+                Estudiantes
+              </Link>
+              <Link
                 to="/create"
                 className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-500 mr-4 ml-5"
               >
