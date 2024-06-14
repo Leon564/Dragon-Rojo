@@ -91,7 +91,7 @@ const useForm = () => {
     if (response) {
       const url = window.URL.createObjectURL(new Blob([await response.blob()]));
       const link = document.createElement("a");
-      const fileName = `${e.name} ${e.last_name}${pdf ? ".pdf" : ".docx"}`;
+      const fileName = `${e.first_name} ${e.last_name}${pdf ? ".pdf" : ".docx"}`;
       link.href = url;
       link.setAttribute("download", fileName);
       document.body.appendChild(link);
