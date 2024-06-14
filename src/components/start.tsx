@@ -1,7 +1,8 @@
 import {
   AppstoreOutlined,
-  SettingOutlined,
   UserOutlined,
+  TeamOutlined,
+  HistoryOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import useTitle from "../hooks/useTitle";
@@ -10,7 +11,7 @@ const functions = [
   {
     name: "Estudiantes",
     description: "Administrar los estudiantes de la aplicación",
-    icon: <AppstoreOutlined />,
+    icon: <TeamOutlined/>,
     path: "/students",
     active: true,
   },
@@ -25,7 +26,7 @@ const functions = [
   {
     name: "Historial",
     description: "Ver los documentos que has creado y descargarlos nuevamente",
-    icon: <SettingOutlined />,
+    icon: <HistoryOutlined />,
     path: "/history",
     active: true,
   },
@@ -44,9 +45,9 @@ const StartMenu = () => {
   return (
     <div
       className="flex items-center justify-center bg-gray-100 p-0 m-0"
-      style={{ height: "calc(100vh - 125px)" }}
+      style={{ minHeight: "calc(100vh - 125px)" }}
     >
-      <div className="p-4">
+      <div className="p-4 text-center">
         <h1 className="text-2xl font-bold mb-4">Start Menu</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {functions.map((func, index) => (
