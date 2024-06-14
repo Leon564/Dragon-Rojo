@@ -85,6 +85,7 @@ const useStudents = () => {
     query.delete("name");
     query.delete("level");
     const newSearch = `?${query.toString()}`;
+    console.log("New search", newSearch);
     navigate({ search: newSearch });
   };
 

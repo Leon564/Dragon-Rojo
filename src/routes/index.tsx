@@ -7,7 +7,7 @@ import { useCallback, useContext } from "react";
 import { AuthContext } from "../auth.context";
 import History from "../components/history";
 import Start from "../components/start";
-import Students from "../components/students";
+import Students from "../components/students/students";
 
 const Routes = () => {
   const { isAuthenticated } = useContext(AuthContext);

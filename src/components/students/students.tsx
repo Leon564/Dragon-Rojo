@@ -24,11 +24,12 @@ import {
 import { Link } from "react-router-dom";
 import moment from "moment";
 
-import useTitle from "../hooks/useTitle";
-import useStudents from "../hooks/useStudents";
-import useQuery from "../hooks/useQuery";
-import LoadingScreen from "./loadingScreen";
-import { LEVELS } from "../libs/constants";
+import useTitle from "../../hooks/useTitle";
+import useStudents from "../../hooks/useStudents";
+import useQuery from "../../hooks/useQuery";
+import LoadingScreen from "../common/loadingScreen";
+import { LEVELS } from "../../libs/constants";
+import ModalStudent from "./modal-student";
 
 const Students = () => {
   useTitle("Estudiantes");
@@ -50,6 +51,8 @@ const Students = () => {
 
   const [selected, setSelected] = useState<string | undefined>();
 
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const name = query.get("name");
     setData({ name });
@@ -59,7 +62,7 @@ const Students = () => {
     {
       key: "1",
       //label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
-      label: <Link to={`#`}>Editar</Link>,
+      label: <Link to={`#`} onClick={()=>setVisible(true)}>Editar</Link>,
       icon: <EditOutlined />,
     },
     {
@@ -120,7 +123,7 @@ const Students = () => {
 
   return (
     <div>
-      <Title>History</Title>
+      <Title>Estudiantes</Title>
       <FilterSection>
         <FormContainer layout="vertical" form={form} initialValues={data}>
           <FormItem label="Nombre" name={"name"}>
@@ -140,6 +143,10 @@ const Students = () => {
         <StyledButton
           className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           type="primary"
+          onClick={() => {
+            setSelected(undefined);
+            setVisible(true);
+          }}
         >
           <PlusOutlined />
         </StyledButton>
@@ -206,6 +213,12 @@ const Students = () => {
         )}
         <PaginationComponent />
       </ListContainer>
+      <ModalStudent
+        onClose={() => setVisible(false)}
+        onSave={() => console.log}
+        open={visible}
+        student={students.find((s) => s._id === selected)}
+      />
     </div>
   );
 };
@@ -254,8 +267,6 @@ const StyledButton = styled(Button)`
     align-self: center;
   }
 `;
-
-//==================================
 
 const Title = styled(Typography.Text)`
   display: block;
