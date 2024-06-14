@@ -80,7 +80,15 @@ const useStudents = () => {
     message.error("Error al eliminar el estudiante");
   };
 
-  return { students, deleteStudent, form, loading, page, setPage, limit, setLimit, total};
+  const resetFilters = () => {
+    form.resetFields();
+    query.delete("name");
+    query.delete("level");
+    const newSearch = `?${query.toString()}`;
+    navigate({ search: newSearch });
+  };
+
+  return { students, deleteStudent, form, loading, page, setPage, limit, setLimit, total, resetFilters};
 };
 
 export default useStudents;

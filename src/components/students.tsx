@@ -28,11 +28,23 @@ import useTitle from "../hooks/useTitle";
 import useStudents from "../hooks/useStudents";
 import useQuery from "../hooks/useQuery";
 import LoadingScreen from "./loadingScreen";
+import { LEVELS } from "../libs/constants";
 
 const Students = () => {
   useTitle("Estudiantes");
   const query = useQuery();
-  const { students, deleteStudent, form, loading, page, setPage, limit, setLimit, total } = useStudents();
+  const {
+    students,
+    deleteStudent,
+    form,
+    loading,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    total,
+    resetFilters,
+  } = useStudents();
 
   const [data, setData] = useState<any>();
 
@@ -74,14 +86,22 @@ const Students = () => {
     },
   ];
 
-  const options = levels.map((level) => ({
+  const options = LEVELS.map((level) => ({
     label: level.color,
     value: level.level,
   }));
 
-  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+  const onShowSizeChange: PaginationProps["onShowSizeChange"] = (
+    current,
+    pageSize
+  ) => {
     console.log(current, pageSize, students.length);
     setLimit(pageSize);
+  };
+
+  const getBeltColor = (level: string) => {
+    const levelData = LEVELS.find((l) => l.level === level);
+    return levelData ? levelData.color : "Unknown";
   };
 
   const PaginationComponent = (props: PaginationProps) => (
@@ -98,7 +118,6 @@ const Students = () => {
     />
   );
 
-
   return (
     <div>
       <Title>History</Title>
@@ -114,6 +133,7 @@ const Students = () => {
         <StyledButton
           className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           type="primary"
+          onClick={resetFilters}
         >
           <SyncOutlined />
         </StyledButton>
@@ -184,32 +204,13 @@ const Students = () => {
             </Row>
           ))
         )}
-        <PaginationComponent/>
+        <PaginationComponent />
       </ListContainer>
     </div>
   );
 };
 
 export default Students;
-
-export const levels = [
-  { level: "10kup", color: "Blanca" },
-  { level: "9kup", color: "Blaca P.Amarillas" },
-  { level: "8kup", color: "Amarilla" },
-  { level: "7kup", color: "Amarilla P.Verdes" },
-  { level: "6kup", color: "Verde" },
-  { level: "5kup", color: "Verde P.Azules" },
-  { level: "4kup", color: "Azul" },
-  { level: "3kup", color: "Azul P.Rojas" },
-  { level: "2kup", color: "Roja" },
-  { level: "1kup", color: "Roja P.Negra" },
-  { level: "1dan", color: "Negra" },
-];
-
-export function getBeltColor(level: string) {
-  const levelData = levels.find((l) => l.level === level);
-  return levelData ? levelData.color : "Unknown";
-}
 
 const FilterSection = styled.div`
   display: flex;
