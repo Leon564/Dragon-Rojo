@@ -11,10 +11,20 @@ const useStudents = () => {
   const navigate = useNavigate();
 
   const [students, setStudents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
   const _name = Form.useWatch("name", form);
   const name = useDebounce(_name, 500);
+
+  const level = Form.useWatch("level", form);
+
+  useEffect(() => {
+    if (!level) query.delete("level");
+    else query.set("level", level);
+    const newSearch = `?${query.toString()}`;
+    navigate({ search: newSearch });
+  }, [level, navigate, query]);
 
   useEffect(() => {
     if (!name) query.delete("name");
@@ -25,21 +35,35 @@ const useStudents = () => {
 
   useEffect(() => {
     console.log("Name", name);
-   
+    setLoading(true);
     const fetchStudents = async () => {
       console.log("Fetching students");
-      const filter = name ? JSON.stringify({
-        $or: [
-          { firstName: { $regex: name, $options: "i" } },
-          { lastName: { $regex: name, $options: "i" } },
-          { $expr: { $regexMatch: { input: { $concat: ['$firstName', ' ', '$lastName'] }, regex: name, options: 'i' } } }
-        ]
-      }) : undefined;
-      const students = await getStudentsService({ filter });
+      let filter:any = {};
+      if (name)
+        filter = {
+          $or: [
+            { firstName: { $regex: name, $options: "i" } },
+            { lastName: { $regex: name, $options: "i" } },
+            {
+              $expr: {
+                $regexMatch: {
+                  input: { $concat: ["$firstName", " ", "$lastName"] },
+                  regex: name,
+                  options: "i",
+                },
+              },
+            },
+          ],
+        };
+      
+      if (level) filter.level = level;
+
+      const students = await getStudentsService({ filter:JSON.stringify(filter) });
       setStudents(students.data);
+      setLoading(false);
     };
     fetchStudents();
-  }, [name]);
+  }, [name, level]);
 
   const deleteStudent = async (id: string) => {
     console.log("Deleting", id);
@@ -52,7 +76,7 @@ const useStudents = () => {
     message.error("Error al eliminar el estudiante");
   };
 
-  return { students, deleteStudent, form };
+  return { students, deleteStudent, form, loading };
 };
 
 export default useStudents;

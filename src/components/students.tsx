@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, Typography, Dropdown, MenuProps, Input, Form } from "antd";
+import { Button, Typography, Dropdown, MenuProps, Input, Form, Select } from "antd";
 import {
   EllipsisOutlined,
   EditOutlined,
   FormOutlined,
   DeleteOutlined,
   SyncOutlined,
-  PlusOutlined
+  PlusOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -17,19 +17,19 @@ import moment from "moment";
 import useTitle from "../hooks/useTitle";
 import useStudents from "../hooks/useStudents";
 import useQuery from "../hooks/useQuery";
+import LoadingScreen from "./loadingScreen";
 
 const Students = () => {
   useTitle("Estudiantes");
   const query = useQuery();
-  const { students, deleteStudent, form } = useStudents();
+  const { students, deleteStudent, form, loading } = useStudents();
 
   const [data, setData] = useState<any>();
-  
+
   const [selected, setSelected] = useState<string | undefined>();
 
   useEffect(() => {
-    const name = query.get('name');
-    console.log("Name", name);
+    const name = query.get("name");
     setData({ name });
   }, []);
 
@@ -37,16 +37,12 @@ const Students = () => {
     {
       key: "1",
       //label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
-      label: (
-        <Link to={`#`}>Editar</Link>
-      ),
+      label: <Link to={`#`}>Editar</Link>,
       icon: <EditOutlined />,
-    },    
+    },
     {
       key: "2",
-      label: (
-        <a href={`/create?student=${selected}`}>Crear diploma</a>
-      ),
+      label: <a href={`/create?student=${selected}`}>Crear diploma</a>,
       icon: <FormOutlined />,
     },
     {
@@ -68,21 +64,35 @@ const Students = () => {
     },
   ];
 
+  const options = levels.map((level) => (
+    { label: level.color, value: level.level}
+  ));
+
   return (
     <div>
       <Title>History</Title>
       <FilterSection>
-      <FormContainer layout="vertical" form={form} initialValues={data}>
-        <FormItem label="Nombre" name={'name'}>
-          <Input />
-        </FormItem>
-        <FormItem label="Nivel" name={'label'}>
-          <Input />
-        </FormItem>        
-      </FormContainer>
-      <StyledButton className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="primary"><SyncOutlined/></StyledButton>
-      <StyledButton className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="primary"><PlusOutlined/></StyledButton>
-    </FilterSection>
+        <FormContainer layout="vertical" form={form} initialValues={data}>
+          <FormItem label="Nombre" name={"name"}>
+            <Input />
+          </FormItem>
+          <FormItem label="Nivel" name={"level"}>
+            <Select options={options}/>
+          </FormItem>
+        </FormContainer>
+        <StyledButton
+          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          type="primary"
+        >
+          <SyncOutlined />
+        </StyledButton>
+        <StyledButton
+          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          type="primary"
+        >
+          <PlusOutlined />
+        </StyledButton>
+      </FilterSection>
       <ListContainer>
         <ListHeader>
           <Row style={{ border: "none" }} header>
@@ -101,38 +111,48 @@ const Students = () => {
             </Col>
           </Row>
         </ListHeader>
-        {students.map((item) => (
-          <Row key={item._id}>
-            <Col style={{ gridArea: "name" }}>
-              <Typography.Text>{`${item.firstName} ${item.lastName}`}</Typography.Text>
-            </Col>
-            <Col style={{ gridArea: "level" }}>
-              <Typography.Text>{`${getBeltColor(item.level)} ${item.level}`}</Typography.Text>
-            </Col>
-            <Col style={{ gridArea: "date" }}>
-              <Typography.Text>
-                {moment(item.dateOfBirth).format("DD-MM-YYYY")}
-              </Typography.Text>
-            </Col>
-            <Col style={{ gridArea: "created" }}>
-              <Typography.Text>
-                {moment(item.createdAt).format("DD-MM-YYYY-hh:mm")}
-              </Typography.Text>
-            </Col>
-            <Col style={{ gridArea: "action" }}>
-              {/* make a dropdown with three points button */}
-              {/* <AntdRow justify="center">
+        {loading ? (
+          <LoadingScreen />
+        ) : (
+          students.map((item) => (
+            <Row key={item._id}>
+              <Col style={{ gridArea: "name" }}>
+                <Typography.Text>{`${item.firstName} ${item.lastName}`}</Typography.Text>
+              </Col>
+              <Col style={{ gridArea: "level" }}>
+                <Typography.Text>{`${getBeltColor(item.level)} ${
+                  item.level
+                }`}</Typography.Text>
+              </Col>
+              <Col style={{ gridArea: "date" }}>
+                <Typography.Text>
+                  {moment(item.dateOfBirth).format("DD-MM-YYYY")}
+                </Typography.Text>
+              </Col>
+              <Col style={{ gridArea: "created" }}>
+                <Typography.Text>
+                  {moment(item.createdAt).format("DD-MM-YYYY-hh:mm")}
+                </Typography.Text>
+              </Col>
+              <Col style={{ gridArea: "action" }}>
+                {/* make a dropdown with three points button */}
+                {/* <AntdRow justify="center">
                 <Button type="primary">Action</Button>
               </AntdRow> */}
 
-              <Dropdown menu={{ items }} destroyPopupOnHide trigger={["click"]}>
-                <Button type="text" onClick={() => setSelected(item._id)}>
-                  <EllipsisOutlined />
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-        ))}
+                <Dropdown
+                  menu={{ items }}
+                  destroyPopupOnHide
+                  trigger={["click"]}
+                >
+                  <Button type="text" onClick={() => setSelected(item._id)}>
+                    <EllipsisOutlined />
+                  </Button>
+                </Dropdown>
+              </Col>
+            </Row>
+          ))
+        )}
       </ListContainer>
     </div>
   );
@@ -151,14 +171,13 @@ export const levels = [
   { level: "3kup", color: "Azul P.Rojas" },
   { level: "2kup", color: "Roja" },
   { level: "1kup", color: "Roja P.Negra" },
-  { level: "1dan", color: "Negra" }
+  { level: "1dan", color: "Negra" },
 ];
 
-export function getBeltColor(level:string) {
-  const levelData = levels.find(l => l.level === level);
+export function getBeltColor(level: string) {
+  const levelData = levels.find((l) => l.level === level);
   return levelData ? levelData.color : "Unknown";
 }
-
 
 const FilterSection = styled.div`
   display: flex;
@@ -204,7 +223,6 @@ const StyledButton = styled(Button)`
 `;
 
 //==================================
-
 
 const Title = styled(Typography.Text)`
   display: block;
