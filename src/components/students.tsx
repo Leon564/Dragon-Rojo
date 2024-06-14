@@ -2,7 +2,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, Typography, Dropdown, MenuProps, Input, Form, Select } from "antd";
+import {
+  Button,
+  Typography,
+  Dropdown,
+  MenuProps,
+  Input,
+  Form,
+  Pagination,
+  PaginationProps,
+  Select,
+} from "antd";
 import {
   EllipsisOutlined,
   EditOutlined,
@@ -22,7 +32,7 @@ import LoadingScreen from "./loadingScreen";
 const Students = () => {
   useTitle("Estudiantes");
   const query = useQuery();
-  const { students, deleteStudent, form, loading } = useStudents();
+  const { students, deleteStudent, form, loading, page, setPage, limit, setLimit, total } = useStudents();
 
   const [data, setData] = useState<any>();
 
@@ -64,9 +74,30 @@ const Students = () => {
     },
   ];
 
-  const options = levels.map((level) => (
-    { label: level.color, value: level.level}
-  ));
+  const options = levels.map((level) => ({
+    label: level.color,
+    value: level.level,
+  }));
+
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    console.log(current, pageSize, students.length);
+    setLimit(pageSize);
+  };
+
+  const PaginationComponent = (props: PaginationProps) => (
+    <Pagination
+      {...props}
+      showSizeChanger={true}
+      pageSize={limit}
+      current={page}
+      onChange={setPage}
+      total={total}
+      onShowSizeChange={onShowSizeChange}
+      showTotal={(total) => `Total ${total} items`}
+      style={{ textAlign: "center" }}
+    />
+  );
+
 
   return (
     <div>
@@ -77,7 +108,7 @@ const Students = () => {
             <Input />
           </FormItem>
           <FormItem label="Nivel" name={"level"}>
-            <Select options={options}/>
+            <Select options={options} />
           </FormItem>
         </FormContainer>
         <StyledButton
@@ -153,6 +184,7 @@ const Students = () => {
             </Row>
           ))
         )}
+        <PaginationComponent/>
       </ListContainer>
     </div>
   );
