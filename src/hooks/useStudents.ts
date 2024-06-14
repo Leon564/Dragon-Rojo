@@ -11,7 +11,10 @@ const useStudents = () => {
   const navigate = useNavigate();
 
   const [students, setStudents] = useState<any[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [form] = Form.useForm();
 
   const _name = Form.useWatch("name", form);
@@ -58,12 +61,13 @@ const useStudents = () => {
       
       if (level) filter.level = level;
 
-      const students = await getStudentsService({ filter:JSON.stringify(filter) });
+      const students = await getStudentsService({ filter:JSON.stringify(filter), page, limit });
       setStudents(students.data);
+      setTotal(students.meta.count);
       setLoading(false);
     };
     fetchStudents();
-  }, [name, level]);
+  }, [name, level, page, limit]);
 
   const deleteStudent = async (id: string) => {
     console.log("Deleting", id);
@@ -76,7 +80,7 @@ const useStudents = () => {
     message.error("Error al eliminar el estudiante");
   };
 
-  return { students, deleteStudent, form, loading };
+  return { students, deleteStudent, form, loading, page, setPage, limit, setLimit, total};
 };
 
 export default useStudents;
