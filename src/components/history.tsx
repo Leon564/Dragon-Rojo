@@ -27,33 +27,32 @@ const History = () => {
     {
       key: "2",
       label: (
-        <a href="#" onClick={() => download(selected!, "docx")}>
+        <span onClick={() => download(selected!, "docx")}>
           descargar Docx
-        </a>
+        </span>
       ),
       icon: <DownloadOutlined />,
     },
     {
       key: "3",
       label: (
-        <a href="#" onClick={() => download(selected!, "pdf")}>
+        <span onClick={() => download(selected!, "pdf")}>
           descargar PDF
-        </a>
+        </span>
       ),
       icon: <DownloadOutlined />,
     },
     {
       key: "4",
       label: (
-        <a
-          href="#"
+        <span
           onClick={() => {
             deleteDocument(selected!);
             setSelected(undefined);
           }}
         >
           Eliminar
-        </a>
+        </span>
       ),
       danger: true,
       icon: <DeleteOutlined />,
