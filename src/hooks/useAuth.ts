@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { checkTokenService, loginService } from "../services/api";
 import { message } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const useAuth = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const from = location.state?.from?.pathname || "/";
+
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token")
   );
@@ -17,11 +23,11 @@ const useAuth = () => {
 
   useEffect(() => {
     console.log(window.location.pathname);
-    if (isAuthenticated && window.location.pathname === "/login") {
-      redirect("/");
+    if (isAuthenticated && window.location.pathname === "/login") {    
+      navigate(from, { replace: true });
       console.log("redirect");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate, from]);
 
   const [path, setPath] = useState(window.location.pathname);
 
@@ -77,8 +83,8 @@ const useAuth = () => {
       rememberMe,
     });
     if (!response.error) {
-      redirect("/");
       localStorage.setItem("token", response.access_token);
+      redirect(from);      
       setLoading(false);
       return;
     }

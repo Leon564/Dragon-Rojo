@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useRoutes,
+} from "react-router-dom";
 import Login from "../components/login";
 import Layout from "../components/layout";
 import CertificateForm from "../components/form";
@@ -38,12 +42,16 @@ const Routes = () => {
     },
   ];
 
-  const ProtectedRoute = useCallback(
-    ({ children }: any) => {
-      return isAuthenticated ? children : <Navigate to="/login" />;
-    },
-    [isAuthenticated]
-  );
+  const ProtectedRoute = ({ children }: any) => {
+    const location = useLocation();
+
+    const redirectToLogin = useCallback(
+      () => <Navigate to="/login" state={{ from: location }} replace />,
+      [location]
+    );
+
+    return isAuthenticated ? children : redirectToLogin();
+  };
 
   const routes = protectedRoutes.map((route) => {
     return {
@@ -57,9 +65,7 @@ const Routes = () => {
     element: <Navigate to="/" />,
   });
 
-  const element = createBrowserRouter([...routes, ...publicRoutes]);
-
-  return element;
+  return useRoutes([...routes, ...publicRoutes]);
 };
 
 export default Routes;
