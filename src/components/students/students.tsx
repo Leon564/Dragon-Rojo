@@ -59,12 +59,9 @@ const Students = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: (
-        <span onClick={() => setVisibleEdit(true)}>
-          Editar
-        </span>
-      ),
+      label: <span>Editar</span>,
       icon: <EditOutlined />,
+      onClick: () => setVisibleEdit(true),
     },
     {
       key: "2",
@@ -73,13 +70,10 @@ const Students = () => {
     },
     {
       key: "3",
-      label: (
-        <span onClick={() => setDeleteView(true)}>
-          Eliminar
-        </span>
-      ),
+      label: <span>Eliminar</span>,
       danger: true,
       icon: <DeleteOutlined />,
+      onClick: () => setDeleteView(true),
     },
   ];
 

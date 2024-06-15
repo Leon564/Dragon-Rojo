@@ -27,7 +27,7 @@ const History = () => {
     {
       key: "2",
       label: (
-        <span onClick={() => download(selected!, "docx")}>
+        <span className="w-full" onClick={() => download(selected!, "docx")}>
           descargar Docx
         </span>
       ),
