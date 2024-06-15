@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, DatePicker, Form, Input, Select, Switch } from "antd";
 import useForm from "../hooks/useForm";
 import useTitle from "../hooks/useTitle";

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import styled from "styled-components";
 import { Button, Typography, Dropdown, MenuProps } from "antd";

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import React, { useContext, useEffect, useRef, useState } from "react";
 import logo from "../assets/icoDR.png";
 import { Button } from "antd";

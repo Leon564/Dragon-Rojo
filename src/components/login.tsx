@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext } from "react";
 import logov3 from "../assets/logoV3.png";
 import { Card, Input, Checkbox, Button, Form, Image } from "antd";
