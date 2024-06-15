@@ -176,7 +176,13 @@ export const createStudentService = async (data: CreateStudent) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${TOKEN}`,
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(
+      //snake_case to camelCase
+      (Object.keys(data) as Array<keyof CreateStudent>).reduce((acc: Record<string, string>, key: keyof CreateStudent) => {
+        acc[key.replace(/_([a-z])/g, (g) => g[1].toUpperCase())] = data[key];
+        return acc;
+      }, {})
+    ),
   });
   if (response.ok) return response.json();
   return { error: response.statusText, ...(await response.json()) };
@@ -191,6 +197,29 @@ export const deleteStudentService = async (id: string) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${TOKEN}`,
       },
+    }
+  );
+  if (response.ok) return response.json();
+  return { error: response.statusText, ...(await response.json()) };
+};
+
+
+export const updateStudentService = async (id: string, data: CreateStudent) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/students/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`,
+      },
+      body: JSON.stringify(
+        //snake_case to camelCase
+        (Object.keys(data) as Array<keyof CreateStudent>).reduce((acc: Record<string, string>, key: keyof CreateStudent) => {
+          acc[key.replace(/_([a-z])/g, (g) => g[1].toUpperCase())] = data[key];
+          return acc;
+        }, {})
+      ),
     }
   );
   if (response.ok) return response.json();

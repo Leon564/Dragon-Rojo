@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import styled from "styled-components";
 import {
   Button,
@@ -30,13 +30,13 @@ import useQuery from "../../hooks/useQuery";
 import LoadingScreen from "../common/loadingScreen";
 import { LEVELS } from "../../libs/constants";
 import ModalStudent from "./modal-student";
+import ConfirmModal from "../common/confirmModal";
 
 const Students = () => {
   useTitle("Estudiantes");
   const query = useQuery();
   const {
     students,
-    deleteStudent,
     form,
     loading,
     page,
@@ -45,25 +45,32 @@ const Students = () => {
     setLimit,
     total,
     resetFilters,
+    onEdit,
+    onSave,
+    deleteView,
+    onDelete,
+    setDeleteView,
+    selected,
+    setSelected,
+    visibleEdit,
+    setVisibleCreate,
+    setVisibleEdit,
+    visibleCreate,
   } = useStudents();
 
-  const [data, setData] = useState<any>();
-
-  const [selected, setSelected] = useState<string | undefined>();
-
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const name = query.get("name");
-    setData({ name });
-  }, []);
+  // useEffect(() => {
+  //   const name = query.get("name");
+  //   const level = query.get("level");
+  //   console.log("Name", name);
+  //   form.setFieldsValue({ name, level });
+  // }, []);
 
   const items: MenuProps["items"] = [
     {
       key: "1",
       //label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
       label: (
-        <Link to={`#`} onClick={() => setVisible(true)}>
+        <Link to={`#`} onClick={() => setVisibleEdit(true)}>
           Editar
         </Link>
       ),
@@ -77,18 +84,11 @@ const Students = () => {
     {
       key: "3",
       label: (
-        <a
-          href="#"
-          onClick={() => {
-            deleteStudent(selected!);
-            setSelected(undefined);
-          }}
-        >
+        <Link to={`#`} onClick={() => setDeleteView(true)}>
           Eliminar
-        </a>
+        </Link>
       ),
       danger: true,
-      disabled: true,
       icon: <DeleteOutlined />,
     },
   ];
@@ -126,106 +126,122 @@ const Students = () => {
   );
 
   return (
-    <div>
-      <Title>Estudiantes</Title>
-      <FilterSection>
-        <FormContainer layout="vertical" form={form} initialValues={data}>
-          <FormItem label="Nombre" name={"name"}>
-            <Input />
-          </FormItem>
-          <FormItem label="Nivel" name={"level"}>
-            <Select options={options} />
-          </FormItem>
-        </FormContainer>
-        <div className="flex flex-row gap-5">
-          <StyledButton
-            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            type="primary"
-            onClick={resetFilters}
-          >
-            <SyncOutlined />
-          </StyledButton>
-          <StyledButton
-            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            type="primary"
-            onClick={() => {
-              setSelected(undefined);
-              setVisible(true);
-            }}
-          >
-            <PlusOutlined />
-          </StyledButton>
-        </div>
-      </FilterSection>
-      <ListContainer>
-        <ListHeader>
-          <Row style={{ border: "none" }} header>
-            <Col className="start" style={{ gridArea: "name" }}>
-              <TextBold>Nombre</TextBold>
-            </Col>
-
-            <Col style={{ gridArea: "level" }}>
-              <TextBold>Nivel</TextBold>
-            </Col>
-            <Col style={{ gridArea: "date" }}>
-              <TextBold>Fecha de nacimiento</TextBold>
-            </Col>
-            <Col style={{ gridArea: "created" }}>
-              <TextBold>Creado</TextBold>
-            </Col>
-          </Row>
-        </ListHeader>
-        {loading ? (
-          <LoadingScreen />
-        ) : (
-          students.map((item) => (
-            <Row key={item._id}>
-              <Col style={{ gridArea: "name" }}>
-                <Typography.Text>{`${item.firstName} ${item.lastName}`}</Typography.Text>
+    <Suspense fallback={<LoadingScreen />}>
+      <div>
+        <Title>Estudiantes</Title>
+        <FilterSection>
+          <FormContainer layout="vertical" form={form}>
+            <FormItem label="Nombre" name={"name"}>
+              <Input />
+            </FormItem>
+            <FormItem label="Nivel" name={"level"}>
+              <Select options={options} />
+            </FormItem>
+          </FormContainer>
+          <div className="flex flex-row gap-5">
+            <StyledButton
+              className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              type="primary"
+              onClick={resetFilters}
+            >
+              <SyncOutlined />
+            </StyledButton>
+            <StyledButton
+              className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              type="primary"
+              onClick={() => {
+                setSelected(undefined);
+                setVisibleCreate(true);
+              }}
+            >
+              <PlusOutlined />
+            </StyledButton>
+          </div>
+        </FilterSection>
+        <ListContainer>
+          <ListHeader>
+            <Row style={{ border: "none" }} header>
+              <Col className="start" style={{ gridArea: "name" }}>
+                <TextBold>Nombre</TextBold>
               </Col>
+
               <Col style={{ gridArea: "level" }}>
-                <Typography.Text>{`${getBeltColor(item.level)} ${
-                  item.level
-                }`}</Typography.Text>
+                <TextBold>Nivel</TextBold>
               </Col>
               <Col style={{ gridArea: "date" }}>
-                <Typography.Text>
-                  {moment(item.dateOfBirth).format("DD-MM-YYYY")}
-                </Typography.Text>
+                <TextBold>Fecha de nacimiento</TextBold>
               </Col>
               <Col style={{ gridArea: "created" }}>
-                <Typography.Text>
-                  {moment(item.createdAt).format("DD-MM-YYYY-hh:mm")}
-                </Typography.Text>
+                <TextBold>Creado</TextBold>
               </Col>
-              <Col style={{ gridArea: "action" }}>
-                {/* make a dropdown with three points button */}
-                {/* <AntdRow justify="center">
+            </Row>
+          </ListHeader>
+          {loading ? (
+            <LoadingScreen />
+          ) : (
+            students.map((item) => (
+              <Row key={item._id}>
+                <Col style={{ gridArea: "name" }}>
+                  <Typography.Text>{`${item.firstName || item.first_name} ${
+                    item.lastName || item.last_name
+                  }`}</Typography.Text>
+                </Col>
+                <Col style={{ gridArea: "level" }}>
+                  <Typography.Text>{`${getBeltColor(item.level)} ${
+                    item.level
+                  }`}</Typography.Text>
+                </Col>
+                <Col style={{ gridArea: "date" }}>
+                  <Typography.Text>
+                    {moment(item.dateOfBirth).format("DD-MM-YYYY")}
+                  </Typography.Text>
+                </Col>
+                <Col style={{ gridArea: "created" }}>
+                  <Typography.Text>
+                    {moment(item.createdAt).format("DD-MM-YYYY-hh:mm")}
+                  </Typography.Text>
+                </Col>
+                <Col style={{ gridArea: "action" }}>
+                  {/* make a dropdown with three points button */}
+                  {/* <AntdRow justify="center">
                 <Button type="primary">Action</Button>
               </AntdRow> */}
 
-                <Dropdown
-                  menu={{ items }}
-                  destroyPopupOnHide
-                  trigger={["click"]}
-                >
-                  <Button type="text" onClick={() => setSelected(item._id)}>
-                    <EllipsisOutlined />
-                  </Button>
-                </Dropdown>
-              </Col>
-            </Row>
-          ))
-        )}
-        <PaginationComponent />
-      </ListContainer>
-      <ModalStudent
-        onClose={() => setVisible(false)}
-        onSave={() => console.log}
-        open={visible}
-        student={students.find((s) => s._id === selected)}
-      />
-    </div>
+                  <Dropdown
+                    menu={{ items }}
+                    destroyPopupOnHide
+                    trigger={["click"]}
+                  >
+                    <Button type="text" onClick={() => setSelected(item._id)}>
+                      <EllipsisOutlined />
+                    </Button>
+                  </Dropdown>
+                </Col>
+              </Row>
+            ))
+          )}
+          <PaginationComponent />
+        </ListContainer>
+        <ModalStudent
+          onClose={() => setVisibleEdit(false)}
+          onSave={onEdit}
+          open={visibleEdit}
+          student={students.find((s) => s._id === selected)}
+        />
+        <ModalStudent
+          onClose={() => setVisibleCreate(false)}
+          onSave={onSave}
+          open={visibleCreate}
+        />
+        <ConfirmModal
+          open={deleteView}
+          title={`${students.find((s) => s._id === selected)?.firstName}`}
+          body={"¿Estás seguro de eliminar este estudiante?"}
+          onOk={() => onDelete(selected!)}
+          onCancel={() => setDeleteView(false)}
+        />
+      </div>
+    </Suspense>
   );
 };
 
