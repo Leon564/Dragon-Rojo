@@ -73,7 +73,6 @@ const useStudents = () => {
       form.setFieldsValue({ name: queryName, level: queryLevel });
       page && setPage(parseInt(queryPage || "1"));
       limit && setLimit(parseInt(queryLimit || "10"));
-
     }
   }, []);
 
