@@ -69,7 +69,7 @@ const useStudents = () => {
   }, [page, limit]);
 
   useEffect(() => {
-    if(!init) {
+    if (!init) {
       form.setFieldsValue({ name: queryName, level: queryLevel });
       page && setPage(parseInt(queryPage || "1"));
       limit && setLimit(parseInt(queryLimit || "10"));
@@ -78,8 +78,7 @@ const useStudents = () => {
 
   useEffect(() => {
     setLoading(true);
-    const fetchStudents = async () => {     
-      
+    const fetchStudents = async () => {
       let filter: any = {};
       if (queryName) {
         setPage(1);
@@ -116,7 +115,6 @@ const useStudents = () => {
   }, [query]);
 
   const onDelete = async (id: string) => {
-    console.log("Deleting", id);
     const response = await deleteStudentService(id);
     if (!response.error) {
       setStudents((prev) => prev.filter((item) => item._id !== id));
@@ -133,13 +131,11 @@ const useStudents = () => {
     query.delete("name");
     query.delete("level");
     const newSearch = `?${query.toString()}`;
-    console.log("New search", newSearch);
     navigate({ search: newSearch });
   };
 
   const onSave = async (values: any) => {
     const response = await createStudentService(values);
-    console.log("Response", response);
     if (!response.error) {
       message.success("Estudiante creado");
       setStudents((prev) => [...prev, response]);
@@ -152,12 +148,9 @@ const useStudents = () => {
 
   const onEdit = useCallback(
     async (student: any) => {
-      console.log("Editing", student);
-
       const response = await updateStudentService(selected!, student);
-      console.log(response);
+
       if (!response.error) {
-        console.log(response);
         message.success("Estudiante actualizado");
         setStudents((prev) =>
           prev.map((item) =>

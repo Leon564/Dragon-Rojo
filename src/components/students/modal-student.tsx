@@ -24,17 +24,13 @@ const ModalStudent = ({
 
   useEffect(() => {
     if (student) {
-        console.log(student);
-        console.log(student.firstName);
       form.setFieldsValue({
         first_name: student.firstName,
         last_name: student.lastName,
-        weight: student.weight
-            ? student.weight
-            : undefined,
-        level : student.level,
-        dateOfBirth:  dayjs(student.dateOfBirth),
-        gender : student.gender
+        weight: student.weight ? student.weight : undefined,
+        level: student.level,
+        dateOfBirth: dayjs(student.dateOfBirth),
+        gender: student.gender,
       });
     }
 

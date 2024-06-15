@@ -22,10 +22,8 @@ const useAuth = () => {
   };
 
   useEffect(() => {
-    console.log(window.location.pathname);
-    if (isAuthenticated && window.location.pathname === "/login") {    
+    if (isAuthenticated && window.location.pathname === "/login") {
       navigate(from, { replace: true });
-      console.log("redirect");
     }
   }, [isAuthenticated, navigate, from]);
 
@@ -59,8 +57,7 @@ const useAuth = () => {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
         message.error(response.message);
-        console.log(response);
-        console.log("checkToken");
+
         redirect("/login");
       }
     };
@@ -84,13 +81,12 @@ const useAuth = () => {
     });
     if (!response.error) {
       localStorage.setItem("token", response.access_token);
-      redirect(from);      
+      redirect(from);
       setLoading(false);
       return;
     }
     message.error(response.message);
-    console.log(response);
-    console.log("login");
+
     setLoading(false);
   };
   const logout = () => {

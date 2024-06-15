@@ -95,9 +95,7 @@ export const createDocumentService = async (data: CreateDocument) => {
         Authorization: `Bearer ${TOKEN}`,
       },
     }
-  );
-  console.log(response);
-  console.log(response.ok);
+  );  
   if (response.ok) return response;
   return { error: response.statusText, ...(await response.json()) };
 };
@@ -119,8 +117,7 @@ export const deleteDocumentService = async (id: string) => {
 
 //students
 //TODO: sort by field
-export const getStudentsService = async (params: any) => {
-  console.log(params.filter);
+export const getStudentsService = async (params: any) => {  
   const query = Object.keys(params)
     .map((key) => {
       if (params[key] !== undefined) {
@@ -213,8 +210,7 @@ export const updateStudentService = async (id: string, data: CreateStudent) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${TOKEN}`,
       },
-      body: JSON.stringify(
-        //snake_case to camelCase
+      body: JSON.stringify(        
         (Object.keys(data) as Array<keyof CreateStudent>).reduce((acc: Record<string, string>, key: keyof CreateStudent) => {
           acc[key.replace(/_([a-z])/g, (g) => g[1].toUpperCase())] = data[key];
           return acc;
