@@ -26,7 +26,7 @@ import moment from "moment";
 
 import useTitle from "../../hooks/useTitle";
 import useStudents from "../../hooks/useStudents";
-import useQuery from "../../hooks/useQuery";
+
 import LoadingScreen from "../common/loadingScreen";
 import { LEVELS } from "../../libs/constants";
 import ModalStudent from "./modal-student";
@@ -34,7 +34,7 @@ import ConfirmModal from "../common/confirmModal";
 
 const Students = () => {
   useTitle("Estudiantes");
-  const query = useQuery();
+
   const {
     students,
     form,
@@ -58,17 +58,9 @@ const Students = () => {
     visibleCreate,
   } = useStudents();
 
-  // useEffect(() => {
-  //   const name = query.get("name");
-  //   const level = query.get("level");
-  //   console.log("Name", name);
-  //   form.setFieldsValue({ name, level });
-  // }, []);
-
   const items: MenuProps["items"] = [
     {
       key: "1",
-      //label: <Link to={`/create/?doc=${selected}`}>Editar</Link>,
       label: (
         <Link to={`#`} onClick={() => setVisibleEdit(true)}>
           Editar
