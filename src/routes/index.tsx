@@ -4,14 +4,15 @@ import {
   useLocation,
   useRoutes,
 } from "react-router-dom";
-import Login from "../components/login";
-import Layout from "../components/layout";
-import CertificateForm from "../components/form";
-import { useCallback, useContext } from "react";
+import { lazy, useCallback, useContext } from "react";
 import { AuthContext } from "../auth.context";
-import History from "../components/history";
-import Start from "../components/start";
-import Students from "../components/students/students";
+
+const Login = lazy(() => import("../components/login"));
+const History = lazy(() => import("../components/history"));
+const Start = lazy(() => import("../components/start"));
+const Students = lazy(() => import("../components/students/students"));
+const Layout = lazy(() => import("../components/layout"));
+const CertificateForm = lazy(() => import("../components/form"));
 
 const Routes = () => {
   const { isAuthenticated } = useContext(AuthContext);
