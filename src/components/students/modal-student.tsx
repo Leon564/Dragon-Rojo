@@ -47,6 +47,7 @@ const ModalStudent = ({
       onClose={onClose}
       onCancel={onClose}
       width={800}
+      destroyOnClose
     >
       <div className="flex flex-col gap-2 p-10">
         <Form layout="vertical" form={form} onFinish={onSave}>

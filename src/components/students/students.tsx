@@ -60,23 +60,23 @@ const Students = () => {
     {
       key: "1",
       label: (
-        <Link to={`#`} onClick={() => setVisibleEdit(true)}>
+        <span onClick={() => setVisibleEdit(true)}>
           Editar
-        </Link>
+        </span>
       ),
       icon: <EditOutlined />,
     },
     {
       key: "2",
-      label: <a href={`/create?student=${selected}`}>Crear diploma</a>,
+      label: <Link to={`/create?student=${selected}`}>Crear diploma</Link>,
       icon: <FormOutlined />,
     },
     {
       key: "3",
       label: (
-        <Link to={`#`} onClick={() => setDeleteView(true)}>
+        <span onClick={() => setDeleteView(true)}>
           Eliminar
-        </Link>
+        </span>
       ),
       danger: true,
       icon: <DeleteOutlined />,
