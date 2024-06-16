@@ -11,7 +11,7 @@ const Login = lazy(() => import("../components/login"));
 const History = lazy(() => import("../components/history"));
 const Start = lazy(() => import("../components/start"));
 const Students = lazy(() => import("../components/students/students"));
-const Layout = lazy(() => import("../components/layout"));
+const Layout = lazy(() => import("../components/layout/layout"));
 const CertificateForm = lazy(() => import("../components/form"));
 
 const Routes = () => {
