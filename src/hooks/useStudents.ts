@@ -31,14 +31,14 @@ const useStudents = () => {
   const [visibleEdit, setVisibleEdit] = useState(false);
   const [visibleCreate, setVisibleCreate] = useState(false);
 
-  const [init, setInit] = useState(false);
+  //const [init, setInit] = useState(false);
 
   const _name = Form.useWatch("name", form);
   const name = useDebounce(_name, 500);
 
   const level = Form.useWatch("level", form);
 
-  const queryName = query.get("name");
+  //const queryName = query.get("name");
   const queryLevel = query.get("level");
   const queryPage = query.get("page");
   const queryLimit = query.get("limit");
@@ -123,7 +123,7 @@ const useStudents = () => {
     setStudents(students.data);
     setTotal(students.meta.count);
     setLoading(false);
-    setInit(true);
+    //setInit(true);
   }, [name, level, page, limit]);
 
   const onDelete = async (id: string) => {
