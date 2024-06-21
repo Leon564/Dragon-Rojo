@@ -25,28 +25,9 @@ const Layout = ({ children }: LayoutProps) => {
     setOpen(!open);
   };
 
-  const [width, setWidth] = useState(0);
-
-  const divRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (divRef.current) {
-        const { width } = divRef.current.getBoundingClientRect();
-        setWidth(width);
-      }
-    };
-
-    window.addEventListener("resize", updateDimensions);
-    updateDimensions();
-
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-    };
-  }, []);
-
   return (
     <>
-      <div className="w-full" ref={divRef}>
+      <div className="w-full">
         <nav className="flex  items-center justify-between flex-wrap bg-gray-800 dark:bg-gray-800 p-1">
           <div
             className=" ml-24 md:ml-5 flex items-center flex-shrink-0 text-white mr-6 cursor-pointer"
@@ -64,14 +45,14 @@ const Layout = ({ children }: LayoutProps) => {
             </span>
           </div>
 
-          {width < 768 && (
-            <>
+        
               <Button
                 style={{
                   height: 50,
                   width: 50,
                   padding: 0,
                 }}
+                className="md:hidden"
                 type="link"
                 icon={
                   <MenuOutlined
@@ -81,9 +62,7 @@ const Layout = ({ children }: LayoutProps) => {
                 }
                 onClick={() => toggleDrawer()}
               />
-            </>
-          )}
-
+       
           <div className="w-full md:block flex-grow lg:flex lg:items-center lg:w-auto hidden">
             <div className="text-sm lg:flex-grow">
               <Link

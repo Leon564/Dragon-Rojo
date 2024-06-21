@@ -29,6 +29,7 @@ import LoadingScreen from "../common/loadingScreen";
 import { LEVELS } from "../../libs/constants";
 import ModalStudent from "./modal-student";
 import ConfirmModal from "../common/confirmModal";
+import ModalDate from "./modal-date";
 
 const Students = () => {
   useTitle("Estudiantes");
@@ -54,6 +55,10 @@ const Students = () => {
     setVisibleCreate,
     setVisibleEdit,
     visibleCreate,
+    downloadActualVisible,
+    setDownloadActualVisible,
+    downloadNextVisible,
+    setDownloadNextVisible,
   } = useStudents();
 
   const items: MenuProps["items"] = [
@@ -65,11 +70,23 @@ const Students = () => {
     },
     {
       key: "2",
-      label: <Link to={`/create?student=${selected}`}>Crear diploma</Link>,
+      label: <Link to={`/create?student=${selected}`}>Editar diploma</Link>,
       icon: <FormOutlined />,
     },
     {
       key: "3",
+      label: <span>Crear diploma de nivel actual</span>,
+      icon: <FormOutlined />,
+      onClick: () => setDownloadActualVisible(true),
+    },
+    {
+      key: "4",
+      label: <span>Crear diploma de proximo nivel</span>,
+      icon: <FormOutlined />,
+      onClick: () => setDownloadNextVisible(true),
+    },
+    {
+      key: "5",
       label: <span>Eliminar</span>,
       danger: true,
       icon: <DeleteOutlined />,
@@ -223,6 +240,18 @@ const Students = () => {
           body={"¿Estás seguro de eliminar este estudiante?"}
           onOk={() => onDelete(selected!)}
           onCancel={() => setDeleteView(false)}
+        />
+        <ModalDate
+          onClose={()=>setDownloadActualVisible(false)}
+          onOk={console.log}
+          open={downloadActualVisible}
+          title={`${students.find((s) => s._id === selected)?.firstName}`}
+        />
+        <ModalDate
+          onClose={()=>setDownloadNextVisible(false)}
+          onOk={console.log}
+          open={downloadNextVisible}
+          title={`${students.find((s) => s._id === selected)?.firstName}`}
         />
       </div>
     </Suspense>

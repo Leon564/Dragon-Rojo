@@ -23,6 +23,8 @@ const useStudents = () => {
   const [limit, setLimit] = useState(10);
   const [form] = Form.useForm();
   const [deleteView, setDeleteView] = useState(false);
+  const [downloadActualVisible, setDownloadActualVisible] = useState(false);
+  const [downloadNextVisible, setDownloadNextVisible] = useState(false);
 
   const [selected, setSelected] = useState<string | undefined>();
 
@@ -41,78 +43,88 @@ const useStudents = () => {
   const queryPage = query.get("page");
   const queryLimit = query.get("limit");
 
-  useEffect(() => {
-    if (init) {
-      if (!level) query.delete("level");
-      else query.set("level", level);
-      const newSearch = `?${query.toString()}`;
-      navigate({ search: newSearch });
-    }
-  }, [level]);
+  // useEffect(() => {
+  //   if (init) {
+  //     if (!level) query.delete("level");
+  //     else query.set("level", level);
+  //     const newSearch = `?${query.toString()}`;
+  //     navigate({ search: newSearch });
+  //     console.log("query", query.toString());
+  //   }
+  // }, [level]);
 
-  useEffect(() => {
-    if (init) {
-      if (!name) query.delete("name");
-      else query.set("name", name);
-      const newSearch = `?${query.toString()}`;
-      navigate({ search: newSearch });
-    }
-  }, [name]);
+  // useEffect(() => {
+  //   if (init) {
+  //     console.log("name", _name);
+  //     if (!name) query.delete("name");
+  //     else query.set("name", name);
+     
+  //     console.log(name);
+  //     const newSearch = `?${query.toString()}`;
+  //     navigate({ search: newSearch });
+  //     console.log("query", query.toString());
+  //   }
+  // }, [name]);
 
-  useEffect(() => {
-    if (init) {
-      query.set("page", page.toString());
-      query.set("limit", limit.toString());
-      const newSearch = `?${query.toString()}`;
-      navigate({ search: newSearch });
-    }
-  }, [page, limit]);
+  // useEffect(() => {
+  //   if (init) {
+  //     query.set("page", page.toString());
+  //     query.set("limit", limit.toString());
+  //     const newSearch = `?${query.toString()}`;
+  //     navigate({ search: newSearch });
+  //     console.log("query", query.toString());
+  //   }
+  // }, [page, limit]);
 
-  useEffect(() => {
-    if (!init) {
-      form.setFieldsValue({ name: queryName, level: queryLevel });
-      page && setPage(parseInt(queryPage || "1"));
-      limit && setLimit(parseInt(queryLimit || "10"));
-    }
+  // useEffect(() => {
+  //   if (!init) {
+  //     form.setFieldsValue({ name: queryName, level: queryLevel });
+  //     if(queryName && _name !==queryName) form.setFieldsValue({ name: queryName });
+  //     if(queryLevel && level !==queryLevel) form.setFieldsValue({ level: query});
+  //     page && setPage(parseInt(queryPage || "1"));
+  //     limit && setLimit(parseInt(queryLimit || "10"));
+  //     console.log("init", init);
+  //   }
+  // }, [init]);
+
+  useEffect(() => {        
+    fetchStudents();
+    console.log("fetch");    
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    const fetchStudents = async () => {
-      let filter: any = {};
-      if (queryName) {
-        setPage(1);
-        filter = {
-          $or: [
-            { firstName: { $regex: queryName, $options: "i" } },
-            { lastName: { $regex: queryName, $options: "i" } },
-            {
-              $expr: {
-                $regexMatch: {
-                  input: { $concat: ["$firstName", " ", "$lastName"] },
-                  regex: queryName,
-                  options: "i",
-                },
+  const fetchStudents = useCallback(async () => {
+    setLoading(true); 
+    let filter: any = {};
+    if (name) {
+      setPage(1);
+      filter = {
+        $or: [
+          { firstName: { $regex: name, $options: "i" } },
+          { lastName: { $regex: name, $options: "i" } },
+          {
+            $expr: {
+              $regexMatch: {
+                input: { $concat: ["$firstName", " ", "$lastName"] },
+                regex: name,
+                options: "i",
               },
             },
-          ],
-        };
-      }
-      if (queryLevel) filter.level = queryLevel;
+          },
+        ],
+      };
+    }
+    if (queryLevel) filter.level = queryLevel;
 
-      const students = await getStudentsService({
-        filter: JSON.stringify(filter),
-        page: queryPage || page,
-        limit: queryLimit || limit,
-      });
-      setStudents(students.data);
-      setTotal(students.meta.count);
-      setLoading(false);
-      setInit(true);
-    };
-
-    fetchStudents();
-  }, [query]);
+    const students = await getStudentsService({
+      filter: JSON.stringify(filter),
+      page: queryPage || page,
+      limit: queryLimit || limit,
+    });
+    setStudents(students.data);
+    setTotal(students.meta.count);
+    setLoading(false);
+    setInit(true);
+  }, [name, level, page, limit]);
 
   const onDelete = async (id: string) => {
     const response = await deleteStudentService(id);
@@ -187,6 +199,10 @@ const useStudents = () => {
     setVisibleEdit,
     visibleCreate,
     setVisibleCreate,
+    downloadActualVisible,
+    setDownloadActualVisible,
+    downloadNextVisible,
+    setDownloadNextVisible,
   };
 };
 
