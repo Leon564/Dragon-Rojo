@@ -11,11 +11,12 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import useHistory from "../hooks/useHistory";
 import useTitle from "../hooks/useTitle";
+import { Helmet } from "react-helmet";
 
 const History = () => {
   useTitle("Historial");
-  const { history, download, deleteDocument } = useHistory();
-  
+  const { history, download, deleteDocument, video } = useHistory();
+
   const [selected, setSelected] = useState<string | undefined>();
 
   const items: MenuProps["items"] = [
@@ -36,9 +37,7 @@ const History = () => {
     {
       key: "3",
       label: (
-        <span onClick={() => download(selected!, "pdf")}>
-          descargar PDF
-        </span>
+        <span onClick={() => download(selected!, "pdf")}>descargar PDF</span>
       ),
       icon: <DownloadOutlined />,
     },
@@ -61,6 +60,19 @@ const History = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta property="og:title" content={video?.title} />
+        <meta property="og:type" content="video" />
+        <meta
+          property="og:url"
+          content={`https://dragon-rojo.onrender.com`}
+        />
+        <meta property="og:image" content={video?.urlCoverImage} />
+        <meta name="twitter:site" content="@test" />
+        <meta name="twitter:title" content={video?.title} />
+        <meta name="twitter:description" content={video?.description} />
+        <meta name="twitter:image:src" content={video?.urlCoverImage} />
+      </Helmet>
       <Title>History</Title>
       <ListContainer>
         <ListHeader>

@@ -51,7 +51,7 @@ const Routes = () => {
       [location]
     );
 
-    return isAuthenticated ? children : redirectToLogin();
+    return children;
   };
 
   const routes = protectedRoutes.map((route) => {

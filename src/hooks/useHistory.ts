@@ -9,10 +9,29 @@ import { message } from "antd";
 
 const useHistory = () => {
   const [history, setHistory] = useState<any[]>([]);
+  const [video, setVideo] = useState<any>({});
   useEffect(() => {
     const fetchHistory = async () => {
       const documents = await getDocumentsService();
       setHistory(documents.data);
+
+      // <meta property="og:title" content={video?.title} />
+      // <meta property="og:type" content="video" />
+      // <meta
+      //   property="og:url"
+      //   content={`https://dragon-rojo.onrender.com`}
+      // />
+      // <meta property="og:image" content={video?.urlCoverImage} />
+      // <meta name="twitter:site" content="@test" />
+      // <meta name="twitter:title" content={video?.title} />
+      // <meta name="twitter:description" content={video?.description} />
+      // <meta name="twitter:image:src" content={video?.urlCoverImage} />
+      setVideo({
+        title: "Dragon Rojo",
+        description: "Dragon Rojo App by Leon564 in a test video helmet",
+        urlCoverImage: "https://dragon-rojo.onrender.com/assets/logoV3-26HbAAUV.png",
+        url: "https://dragon-rojo.onrender.com",
+      })
     };
     fetchHistory();
   }, []);
@@ -55,7 +74,7 @@ const useHistory = () => {
     message.error("Error al eliminar el documento");
   };
 
-  return { history, download, deleteDocument };
+  return { history, download, deleteDocument, video };
 };
 
 export default useHistory;
