@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Navigate,
-  useLocation,
+  //useLocation,
   useRoutes,
 } from "react-router-dom";
-import { lazy, useCallback, useContext } from "react";
-import { AuthContext } from "../auth.context";
+import { lazy } from "react";
+//import { AuthContext } from "../auth.context";
 
 const Login = lazy(() => import("../components/login"));
 const History = lazy(() => import("../components/history"));
@@ -15,7 +15,7 @@ const Layout = lazy(() => import("../components/layout/layout"));
 const CertificateForm = lazy(() => import("../components/form"));
 
 const Routes = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  //const { isAuthenticated } = useContext(AuthContext);
 
   const protectedRoutes = [
     {
@@ -44,13 +44,8 @@ const Routes = () => {
   ];
 
   const ProtectedRoute = ({ children }: any) => {
-    const location = useLocation();
 
-    const redirectToLogin = useCallback(
-      () => <Navigate to="/login" state={{ from: location }} replace />,
-      [location]
-    );
-
+  
     return children;
   };
 
