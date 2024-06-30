@@ -13,7 +13,8 @@ const useHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       const documents = await getDocumentsService();
-      setHistory(documents.data);
+      console.log(documents);
+      setHistory(documents?.data || []);
 
       // <meta property="og:title" content={video?.title} />
       // <meta property="og:type" content="video" />
