@@ -13,7 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "antd": "^5.18.0",
+    "antd": "^5.22.5",
     "bcrypt": "^5.1.1",
     "dayjs": "^1.11.11",
     "framer-motion": "^11.2.10",

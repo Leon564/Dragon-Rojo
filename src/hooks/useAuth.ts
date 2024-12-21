@@ -80,13 +80,13 @@ const useAuth = () => {
       rememberMe,
     });
 
-    if ([200, 201].includes(response.status)) {
+    if (response.access_token) {
       localStorage.setItem("token", response.access_token);
       redirect(from);
       setLoading(false);
       return;
     }
-    message.error(response.message);
+    message.error(response?.message || "Error al iniciar sesión", 5);
 
     setLoading(false);
   };
