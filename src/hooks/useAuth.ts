@@ -80,7 +80,7 @@ const useAuth = () => {
       rememberMe,
     });
 
-    if (response.access_token) {
+    if (response?.access_token) {
       localStorage.setItem("token", response.access_token);
       redirect(from);
       setLoading(false);
