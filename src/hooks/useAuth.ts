@@ -79,7 +79,8 @@ const useAuth = () => {
       password,
       rememberMe,
     });
-    if (!response.error) {
+
+    if ([200, 201].includes(response.status)) {
       localStorage.setItem("token", response.access_token);
       redirect(from);
       setLoading(false);
